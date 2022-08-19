@@ -4,16 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class ToJson {
+
   private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-  private File file = new File(classloader.getResource("data.json").getFile());
+  private final File resultFile = Paths
+      .get("src/main/resources/data.json")
+      .toFile();
 
   public void convert() throws IOException {
     InputStream is = classloader.getResourceAsStream("data.csv");
@@ -25,12 +30,12 @@ public class ToJson {
       }).toList();
 
       ObjectMapper mapper = new ObjectMapper();
-      mapper.enable(SerializationFeature.INDENT_OUTPUT);
-      mapper.writeValue(file, players);
+      mapper.writeValue(resultFile, players);
+
     }
   }
 
   public File jsonFile() {
-    return file;
+    return resultFile;
   }
 }
